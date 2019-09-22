@@ -3,8 +3,13 @@ package com.team7.sunhacks2019
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
 import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.portal.Portal
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,28 +18,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // create an ArcGISMap with the BasemapType topographic
-        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC,
-                34.056295,
-                -117.195800,
-                16)
+        // val scene3d = ArcGISScene("https://sunhacks2019.maps.arcgis.com/home/webscene/viewer.html?webscene=bbab9e7966f8444c8d5a79a807e34124")
 
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
+        // Initialize the portal with ArcGIS Online
+        val portal = Portal("http://www.arcgis.com")
+
+        // Get the portal item
+        val portalItem = PortalItem(portal, "bbab9e7966f8444c8d5a79a807e34124")
+
+        // Create the scene from the portal item
+        val scene3d = ArcGISScene(portalItem)
+
+        sceneView.setScene(scene3d);
     }
 
     override fun onPause() {
         //override pause behavior to include pausing mapView
         super.onPause()
-        mapView.pause()
+        sceneView.pause()
     }
     override fun onResume() {
         //override resume behavior to include resuming mapView
         super.onResume()
-        mapView.resume()
+        sceneView.resume()
     }
     override fun onDestroy() {
         //override destroy behavior to include destroying mapView
         super.onDestroy()
-        mapView.dispose()
+        sceneView.dispose()
     }
 }
